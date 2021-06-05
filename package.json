@@ -1,0 +1,31 @@
+{
+  "name": "setup-dfx",
+  "version": "1.0.0",
+  "description": "setup dfx action",
+  "main": "lib/setup-dfx.js",
+  "scripts": {
+    "build": "tsc && ncc build --license licenses.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internet-computer/setup-dfx.git"
+  },
+  "keywords": [
+    "dfx",
+    "setup"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/internet-computer/setup-dfx/issues"
+  },
+  "homepage": "https://github.com/internet-computer/setup-dfx#readme",
+  "dependencies": {
+    "@actions/core": "^1.3.0",
+    "@actions/io": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.1",
+    "@vercel/ncc": "^0.28.6",
+    "typescript": "^4.3.2"
+  }
+}
