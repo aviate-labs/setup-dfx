@@ -19,12 +19,14 @@ export async function run() {
         infoExec(`${dfxPath} --version`);
 
         // Install dfx cache to get moc.
-        cp.execSync(`${dfxPath} cache install`);
-        let cachePath = infoExec(`${dfxPath} cache show`).trim();
-        core.addPath(cachePath);
+        if (core.getBooleanInput('install-moc')) {
+            cp.execSync(`${dfxPath} cache install`);
+            let cachePath = infoExec(`${dfxPath} cache show`).trim();
+            core.addPath(cachePath);
 
-        let mocPath = await io.which('moc');
-        infoExec(`${mocPath} --version`);
+            let mocPath = await io.which('moc');
+            infoExec(`${mocPath} --version`);
+        }
 
         // Install vessel.
         let vesselVersion = core.getInput('vessel-version');
