@@ -56,11 +56,13 @@ function run() {
             core.debug(dfxPath);
             infoExec(`${dfxPath} --version`);
             // Install dfx cache to get moc.
-            child_process_1.default.execSync(`${dfxPath} cache install`);
-            let cachePath = infoExec(`${dfxPath} cache show`).trim();
-            core.addPath(cachePath);
-            let mocPath = yield io.which('moc');
-            infoExec(`${mocPath} --version`);
+            if (core.getBooleanInput('install-moc')) {
+                child_process_1.default.execSync(`${dfxPath} cache install`);
+                let cachePath = infoExec(`${dfxPath} cache show`).trim();
+                core.addPath(cachePath);
+                let mocPath = yield io.which('moc');
+                infoExec(`${mocPath} --version`);
+            }
             // Install vessel.
             let vesselVersion = core.getInput('vessel-version');
             if (vesselVersion) {
