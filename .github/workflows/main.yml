@@ -7,5 +7,7 @@ jobs:
       - uses: allusion-be/setup-dfx@main
         with:
           dfx-version: 0.7.1
+          vessel-version: 0.6.1
       - run: dfx --version
       - run: moc --version
+      - run: vessel --version
