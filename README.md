@@ -2,9 +2,12 @@
 
 This action sets up a dfx environment, also includes `moc`.
 
+**!** Only supports Ubuntu virtual environments.
+
 ## Usage
 
 ```yml
+runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v2
 - uses: allusion-be/setup-dfx@main
@@ -13,6 +16,7 @@ steps:
 - run: |
     dfx --version
     moc --version
+    vessel --version
 ```
 
 ## Possible Improvements

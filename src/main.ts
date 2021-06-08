@@ -1,8 +1,14 @@
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import cp from 'child_process';
+import os from 'os';
 
 export async function run() {
+    if (os.platform() !== 'linux') {
+        core.setFailed(`Action not supported for: ${os.platform()} ${os.arch()}.`)
+        return;
+    }
+
     try {
         let dfxVersion = core.getInput('dfx-version');
         core.info(`Setup dfx version ${dfxVersion}`);
