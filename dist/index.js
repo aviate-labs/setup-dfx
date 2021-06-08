@@ -42,8 +42,13 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const io = __importStar(__nccwpck_require__(436));
 const child_process_1 = __importDefault(__nccwpck_require__(129));
+const os_1 = __importDefault(__nccwpck_require__(87));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        if (os_1.default.platform() !== 'linux') {
+            core.setFailed(`Action not supported for: ${os_1.default.platform()} ${os_1.default.arch()}.`);
+            return;
+        }
         try {
             let dfxVersion = core.getInput('dfx-version');
             core.info(`Setup dfx version ${dfxVersion}`);
