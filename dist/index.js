@@ -50,30 +50,38 @@ function run() {
             return;
         }
         try {
-            let dfxVersion = core.getInput('dfx-version');
+            const dfxVersion = core.getInput('dfx-version');
             core.info(`Setup dfx version ${dfxVersion}`);
             // Opt-out of having data collected about dfx usage.
             core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
             // Install dfx.
             child_process_1.default.execSync(`echo y | DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`);
             core.addPath('/home/runner/bin');
-            let dfxPath = yield io.which('dfx');
+            const dfxPath = yield io.which('dfx');
             core.debug(dfxPath);
             infoExec(`${dfxPath} --version`);
+            // Setup identity.
+            const id = process.env[`DFX_IDENTITY_PEM`] || '';
+            if (id) {
+                child_process_1.default.execSync(`${dfxPath} identity new action`);
+                child_process_1.default.execSync(`chmod +w /home/runner/.config/dfx/identity/action/identity.pem`);
+                child_process_1.default.execSync(`echo "${id}" > /home/runner/.config/dfx/identity/action/identity.pem`);
+                infoExec(`${dfxPath} identity list`);
+            }
             // Install dfx cache to get moc.
             if (core.getBooleanInput('install-moc')) {
                 child_process_1.default.execSync(`${dfxPath} cache install`);
-                let cachePath = infoExec(`${dfxPath} cache show`).trim();
+                const cachePath = infoExec(`${dfxPath} cache show`).trim();
                 core.addPath(cachePath);
-                let mocPath = yield io.which('moc');
+                const mocPath = yield io.which('moc');
                 infoExec(`${mocPath} --version`);
             }
             // Install vessel.
-            let vesselVersion = core.getInput('vessel-version');
+            const vesselVersion = core.getInput('vessel-version');
             if (vesselVersion) {
                 child_process_1.default.execSync(`curl -L https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64 > /home/runner/bin/vessel`);
                 child_process_1.default.execSync(`chmod +x /home/runner/bin/vessel`);
-                let vesselPath = yield io.which('vessel');
+                const vesselPath = yield io.which('vessel');
                 infoExec(`${vesselPath} --version`);
             }
         }
@@ -84,7 +92,7 @@ function run() {
 }
 exports.run = run;
 function infoExec(command) {
-    let cmdStr = (child_process_1.default.execSync(command) || '').toString();
+    const cmdStr = (child_process_1.default.execSync(command) || '').toString();
     core.info(cmdStr);
     return cmdStr;
 }
