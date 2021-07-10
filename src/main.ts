@@ -10,7 +10,7 @@ export async function run() {
     }
 
     try {
-        let dfxVersion = core.getInput('dfx-version');
+        const dfxVersion = core.getInput('dfx-version');
         core.info(`Setup dfx version ${dfxVersion}`);
 
         // Opt-out of having data collected about dfx usage.
@@ -20,27 +20,36 @@ export async function run() {
         cp.execSync(`echo y | DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`);
         core.addPath('/home/runner/bin');
 
-        let dfxPath = await io.which('dfx');
+        const dfxPath = await io.which('dfx');
         core.debug(dfxPath);
         infoExec(`${dfxPath} --version`);
+
+        // Setup identity.
+        const id: string = process.env[`DFX_IDENTITY_PEM`] || '';
+        if (id) {
+            cp.execSync(`${dfxPath} identity new action`);
+            cp.execSync(`chmod +w /home/runner/.config/dfx/identity/action/identity.pem`)
+            cp.execSync(`echo "${id}" > /home/runner/.config/dfx/identity/action/identity.pem`);
+            infoExec(`${dfxPath} identity list`);
+        }
 
         // Install dfx cache to get moc.
         if (core.getBooleanInput('install-moc')) {
             cp.execSync(`${dfxPath} cache install`);
-            let cachePath = infoExec(`${dfxPath} cache show`).trim();
+            const cachePath = infoExec(`${dfxPath} cache show`).trim();
             core.addPath(cachePath);
 
-            let mocPath = await io.which('moc');
+            const mocPath = await io.which('moc');
             infoExec(`${mocPath} --version`);
         }
 
         // Install vessel.
-        let vesselVersion = core.getInput('vessel-version');
+        const vesselVersion = core.getInput('vessel-version');
         if (vesselVersion) {
             cp.execSync(`curl -L https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64 > /home/runner/bin/vessel`);
             cp.execSync(`chmod +x /home/runner/bin/vessel`);
 
-            let vesselPath = await io.which('vessel');
+            const vesselPath = await io.which('vessel');
             infoExec(`${vesselPath} --version`);
         }
     } catch (e) {
@@ -49,7 +58,7 @@ export async function run() {
 }
 
 function infoExec(command: string) : string {
-    let cmdStr = (cp.execSync(command) || '').toString();
+    const cmdStr = (cp.execSync(command) || '').toString();
     core.info(cmdStr);
     return cmdStr;
 }

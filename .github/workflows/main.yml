@@ -6,8 +6,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./
         with:
-          dfx-version: 0.7.1
-          vessel-version: 0.6.1
+          dfx-version: 0.7.2
+          vessel-version: 0.6.2
       - run: |
           dfx --version
           moc --version
