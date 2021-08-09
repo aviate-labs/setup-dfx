@@ -4,11 +4,11 @@ inputs:
   dfx-version:
     required: true
     description: 'The dfx version to download.'
+  install-moc:
+    description: 'Whether to install moc.'
+    default: false
   vessel-version:
     description: 'The vessel version to download.'
-  install-moc:
-    description: 'Whether to install moc. Default is true.'
-    default: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -7,6 +7,7 @@ jobs:
       - uses: ./
         with:
           dfx-version: 0.7.2
+          install-moc: true
           vessel-version: 0.6.2
       - run: |
           dfx --version

@@ -12,7 +12,8 @@ steps:
 - uses: actions/checkout@v2
 - uses: aviate-labs/setup-dfx@v0.2.2
   with:
-    dfx-version: 0.7.1
+    dfx-version: 0.7.2
+    install-moc: true
     vessel-version: 0.6.1
 - run: |
     dfx --version
