@@ -10,7 +10,7 @@ This action sets up a dfx environment, also includes `moc`.
 runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v2
-- uses: allusion-be/setup-dfx@main
+- uses: aviate-labs/setup-dfx@v0.2.2
   with:
     dfx-version: 0.7.1
     vessel-version: 0.6.1
@@ -26,7 +26,7 @@ steps:
 runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v2
-- uses: allusion-be/setup-dfx@main
+- uses: aviate-labs/setup-dfx@v0.2.2
   with:
     dfx-version: 0.7.2
     install-moc: false
