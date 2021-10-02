@@ -1,6 +1,6 @@
 # Setup The Internet Computer SDK
 
-This action sets up a dfx environment, also includes `moc`.
+This action sets up a dfx environment, also includes `moc` and `vessel`.
 
 **!** Only supports Ubuntu virtual environments.
 
@@ -10,15 +10,10 @@ This action sets up a dfx environment, also includes `moc`.
 runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v2
-- uses: aviate-labs/setup-dfx@v0.2.2
+- uses: aviate-labs/setup-dfx@v0.2.3
   with:
-    dfx-version: 0.7.2
-    install-moc: true
-    vessel-version: 0.6.1
-- run: |
-    dfx --version
-    moc --version
-    vessel --version
+    vessel-version: 0.6.2
+- run: for i in src/*.mo ; do $(vessel bin)/moc $(vessel sources) --check $i ; done
 ```
 
 ### Deploying
@@ -27,10 +22,9 @@ steps:
 runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v2
-- uses: aviate-labs/setup-dfx@v0.2.2
+- uses: aviate-labs/setup-dfx@v0.2.3
   with:
-    dfx-version: 0.7.2
-    install-moc: false
+    dfx-version: 0.8.1
   env:
     DFX_IDENTITY_PEM: ${{ secrets.DFX_IDENTITY_PEM }}
 - run: |
@@ -40,10 +34,8 @@ steps:
 
 ## Possible Improvements
 
-1. Make use of the [manifest.json](https://sdk.dfinity.org/manifest.json) to check versions.
-2. The path is currently always `/home/runner/...`, is there a better way to do this?
-3. Include `base` modules in the `moc` command.
-   (i.e. `moc --package base $(dfx cache show)/base`)
+- Make use of the [manifest.json](https://sdk.dfinity.org/manifest.json) to check versions.
 
 ## License
+
 The scripts and documentation in this project are released under the [MIT License](./LICENSE).

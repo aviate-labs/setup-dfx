@@ -49,8 +49,8 @@ function run() {
             core.setFailed(`Action not supported for: ${os_1.default.platform()} ${os_1.default.arch()}.`);
             return;
         }
-        try {
-            const dfxVersion = core.getInput('dfx-version');
+        const dfxVersion = core.getInput('dfx-version');
+        if (dfxVersion) {
             core.info(`Setup dfx version ${dfxVersion}`);
             // Opt-out of having data collected about dfx usage.
             core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
@@ -77,17 +77,14 @@ function run() {
                 const mocPath = yield io.which('moc');
                 infoExec(`${mocPath} --version`);
             }
-            // Install vessel.
-            const vesselVersion = core.getInput('vessel-version');
-            if (vesselVersion) {
-                child_process_1.default.execSync(`wget -O /home/runner/bin/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64`);
-                child_process_1.default.execSync(`chmod +x /home/runner/bin/vessel`);
-                const vesselPath = yield io.which('vessel');
-                infoExec(`${vesselPath} --version`);
-            }
         }
-        catch (e) {
-            core.setFailed(e.message);
+        // Install vessel.
+        const vesselVersion = core.getInput('vessel-version');
+        if (vesselVersion) {
+            child_process_1.default.execSync(`wget -O /home/runner/bin/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64`);
+            child_process_1.default.execSync(`chmod +x /home/runner/bin/vessel`);
+            const vesselPath = yield io.which('vessel');
+            infoExec(`${vesselPath} --version`);
         }
     });
 }

@@ -2,10 +2,9 @@ name: 'Setup dfx environment'
 description: 'Setup a dfx environment and add it to the PATH.'
 inputs:
   dfx-version:
-    required: true
     description: 'The dfx version to download.'
   install-moc:
-    description: 'Whether to install moc.'
+    description: 'Whether to install moc through dfx.'
     default: false
   vessel-version:
     description: 'The vessel version to download.'

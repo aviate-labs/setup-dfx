@@ -9,8 +9,8 @@ export async function run() {
         return;
     }
 
-    try {
-        const dfxVersion = core.getInput('dfx-version');
+    const dfxVersion = core.getInput('dfx-version');
+    if (dfxVersion) {
         core.info(`Setup dfx version ${dfxVersion}`);
 
         // Opt-out of having data collected about dfx usage.
@@ -43,22 +43,20 @@ export async function run() {
             const mocPath = await io.which('moc');
             infoExec(`${mocPath} --version`);
         }
+    }
 
-        // Install vessel.
-        const vesselVersion = core.getInput('vessel-version');
-        if (vesselVersion) {
-            cp.execSync(`wget -O /home/runner/bin/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64`);
-            cp.execSync(`chmod +x /home/runner/bin/vessel`);
+    // Install vessel.
+    const vesselVersion = core.getInput('vessel-version');
+    if (vesselVersion) {
+        cp.execSync(`wget -O /home/runner/bin/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64`);
+        cp.execSync(`chmod +x /home/runner/bin/vessel`);
 
-            const vesselPath = await io.which('vessel');
-            infoExec(`${vesselPath} --version`);
-        }
-    } catch (e) {
-        core.setFailed(e.message);
+        const vesselPath = await io.which('vessel');
+        infoExec(`${vesselPath} --version`);
     }
 }
 
-function infoExec(command: string) : string {
+function infoExec(command: string): string {
     const cmdStr = (cp.execSync(command) || '').toString();
     core.info(cmdStr);
     return cmdStr;
