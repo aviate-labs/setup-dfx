@@ -10,8 +10,9 @@ export async function run() {
     }
 
     const dfxVersion = core.getInput('dfx-version');
+    const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
     if (dfxVersion) {
-        core.info(`Setup dfx version ${dfxVersion}`);
+        core.info(`Setup dfx version ${dfxVersion}${dfxDisableEncryption ? ' (without encryption)' : ''}`);
 
         // Opt-out of having data collected about dfx usage.
         core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
@@ -28,7 +29,7 @@ export async function run() {
         // Setup identity.
         const id: string = process.env[`DFX_IDENTITY_PEM`] || '';
         if (id) {
-            cp.execSync(`${dfxPath} identity new action`);
+            cp.execSync(`${dfxPath} identity new action${dfxDisableEncryption ? ' --disable-encryption' : ''}`);
             cp.execSync(`chmod +w /home/runner/.config/dfx/identity/action/identity.pem`)
             cp.execSync(`echo "${id}" > /home/runner/.config/dfx/identity/action/identity.pem`);
             infoExec(`${dfxPath} identity list`);

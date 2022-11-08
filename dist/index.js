@@ -50,8 +50,9 @@ function run() {
             return;
         }
         const dfxVersion = core.getInput('dfx-version');
+        const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
         if (dfxVersion) {
-            core.info(`Setup dfx version ${dfxVersion}`);
+            core.info(`Setup dfx version ${dfxVersion}${dfxDisableEncryption ? ' (without encryption)' : ''}`);
             // Opt-out of having data collected about dfx usage.
             core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
             // Install dfx.
@@ -64,7 +65,7 @@ function run() {
             // Setup identity.
             const id = process.env[`DFX_IDENTITY_PEM`] || '';
             if (id) {
-                child_process_1.default.execSync(`${dfxPath} identity new action`);
+                child_process_1.default.execSync(`${dfxPath} identity new action${dfxDisableEncryption ? ' --disable-encryption' : ''}`);
                 child_process_1.default.execSync(`chmod +w /home/runner/.config/dfx/identity/action/identity.pem`);
                 child_process_1.default.execSync(`echo "${id}" > /home/runner/.config/dfx/identity/action/identity.pem`);
                 infoExec(`${dfxPath} identity list`);
