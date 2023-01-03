@@ -4,6 +4,9 @@ description: 'Setup a dfx environment and add it to the PATH.'
 inputs:
   dfx-version:
     description: 'The dfx version to download.'
+  dfx-disable-encryption:
+    description: 'Wether to use the .pem encryption'
+    default: false
   install-moc:
     description: 'Whether to install moc through dfx.'
     default: false
