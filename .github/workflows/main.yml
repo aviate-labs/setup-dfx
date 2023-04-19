@@ -1,14 +1,17 @@
-on: [push]
+on: [ push ]
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./
         with:
-          dfx-version: 0.8.1
+          dfx-version: 0.13.1
           install-moc: true
-          vessel-version: 0.6.2
+          vessel-version: 0.6.5
       - run: |
           dfx --version
           moc --version
