@@ -45,7 +45,16 @@ const child_process_1 = __importDefault(__nccwpck_require__(129));
 const os_1 = __importDefault(__nccwpck_require__(87));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (os_1.default.platform() !== 'linux') {
+        // Configured to run on linux by default.
+        let bin = '/home/runner/bin';
+        let vesselBuild = 'linux64';
+        // Alter params if running on Mac OS.
+        if (os_1.default.platform() === 'darwin') {
+            bin = '/usr/local/share';
+            vesselBuild = 'macos';
+        }
+        // Die if not running on linux or Mac OS.
+        if (!['linux', 'darwin'].includes(os_1.default.platform())) {
             core.setFailed(`Action not supported for: ${os_1.default.platform()} ${os_1.default.arch()}.`);
             return;
         }
@@ -56,8 +65,8 @@ function run() {
             // Opt-out of having data collected about dfx usage.
             core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
             // Install dfx.
-            child_process_1.default.execSync(`mkdir -p /home/runner/bin`);
-            core.addPath('/home/runner/bin');
+            child_process_1.default.execSync(`mkdir -p ${bin}`);
+            core.addPath(bin);
             child_process_1.default.execSync(`echo y | DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`);
             const dfxPath = yield io.which('dfx');
             core.debug(dfxPath);
@@ -82,8 +91,8 @@ function run() {
         // Install vessel.
         const vesselVersion = core.getInput('vessel-version');
         if (vesselVersion) {
-            child_process_1.default.execSync(`wget -O /home/runner/bin/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64`);
-            child_process_1.default.execSync(`chmod +x /home/runner/bin/vessel`);
+            child_process_1.default.execSync(`wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`);
+            child_process_1.default.execSync(`chmod +x ${bin}/vessel`);
             const vesselPath = yield io.which('vessel');
             infoExec(`${vesselPath} --version`);
         }
