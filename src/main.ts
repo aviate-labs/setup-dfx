@@ -4,7 +4,18 @@ import cp from 'child_process';
 import os from 'os';
 
 export async function run() {
-    if (os.platform() !== 'linux') {
+    // Configured to run on linux by default.
+    let bin = '/home/runner/bin';
+    let vesselBuild = 'linux64';
+    
+    // Alter params if running on Mac OS.
+    if (os.platform() === 'darwin') {
+        bin = '/usr/local/share';
+        vesselBuild = 'macos';
+    }
+    
+    // Die if not running on linux or Mac OS.
+    if (!['linux', 'darwin'].includes(os.platform())) {
         core.setFailed(`Action not supported for: ${os.platform()} ${os.arch()}.`)
         return;
     }
@@ -18,8 +29,8 @@ export async function run() {
         core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
 
         // Install dfx.
-        cp.execSync(`mkdir -p /home/runner/bin`);
-        core.addPath('/home/runner/bin');
+        cp.execSync(`mkdir -p ${bin}`);
+        core.addPath(bin);
         cp.execSync(`echo y | DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`);
 
         const dfxPath = await io.which('dfx');
@@ -49,8 +60,10 @@ export async function run() {
     // Install vessel.
     const vesselVersion = core.getInput('vessel-version');
     if (vesselVersion) {
-        cp.execSync(`wget -O /home/runner/bin/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-linux64`);
-        cp.execSync(`chmod +x /home/runner/bin/vessel`);
+        cp.execSync(
+          `wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`
+        );
+        cp.execSync(`chmod +x ${bin}/vessel`);
 
         const vesselPath = await io.which('vessel');
         infoExec(`${vesselPath} --version`);
