@@ -13,7 +13,7 @@ inputs:
   vessel-version:
     description: 'The vessel version to download.'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: 'box'
