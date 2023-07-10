@@ -10,7 +10,7 @@ This action sets up a `dfx` environment, also includes `moc` and `vessel`.
 runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v3
-- uses: aviate-labs/setup-dfx@v0.2.5
+- uses: aviate-labs/setup-dfx@v0.2.6
   with:
     vessel-version: 0.6.5
 - run: for i in src/*.mo ; do $(vessel bin)/moc $(vessel sources) --check $i ; done
@@ -22,7 +22,7 @@ steps:
 runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v3
-- uses: aviate-labs/setup-dfx@v0.2.5
+- uses: aviate-labs/setup-dfx@v0.2.6
   with:
     dfx-version: 0.14.2
   env:
