@@ -26,11 +26,13 @@
   "homepage": "https://github.com/internet-computer/setup-dfx#readme",
   "dependencies": {
     "@actions/core": "^1.3.0",
-    "@actions/io": "^1.1.0"
+    "@actions/io": "^1.1.0",
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/node": "^15.12.1",
-    "@vercel/ncc": "^0.28.6",
+    "@types/semver": "^7.5.0",
+    "@vercel/ncc": "^0.36.1",
     "typescript": "^4.3.2"
   }
 }

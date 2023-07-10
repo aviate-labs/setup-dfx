@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import cp from 'child_process';
 import os from 'os';
+import { gte } from "semver";
 
 export async function run() {
     // Configured to run on linux by default.
@@ -42,7 +43,17 @@ export async function run() {
         // Setup identity.
         const id: string = process.env[`DFX_IDENTITY_PEM`] || '';
         if (id) {
-            cp.execSync(`${dfxPath} identity new action${dfxDisableEncryption ? ' --disable-encryption' : ''}`);
+            let disableEncryptionFlag = '';
+            if (dfxDisableEncryption) {
+                if (gte(dfxVersion, "0.13.0")) {
+                    disableEncryptionFlag = ' --storage-mode=plaintext';
+                } else {
+                    // Deprecated since dfx 0.13.0.
+                    disableEncryptionFlag = ' --disable-encryption';
+                }
+            }
+
+            cp.execSync(`${dfxPath} identity new action${disableEncryptionFlag}`);
             cp.execSync(`chmod +w /home/runner/.config/dfx/identity/action/identity.pem`)
             cp.execSync(`echo "${id}" > /home/runner/.config/dfx/identity/action/identity.pem`);
             infoExec(`${dfxPath} identity list`);
