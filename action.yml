@@ -6,10 +6,10 @@ inputs:
     description: 'The dfx version to download.'
   dfx-disable-encryption:
     description: 'Wether to use the .pem encryption'
-    default: false
+    default: "false"
   install-moc:
     description: 'Whether to install moc through dfx.'
-    default: false
+    default: "false"
   vessel-version:
     description: 'The vessel version to download.'
 runs:

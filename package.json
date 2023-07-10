@@ -1,6 +1,6 @@
 {
   "name": "setup-dfx",
-  "version": "1.0.0",
+  "version": "0.2.5",
   "description": "setup dfx action",
   "main": "lib/setup-dfx.js",
   "scripts": {

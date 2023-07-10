@@ -20,6 +20,10 @@ export async function run() {
         return;
     }
 
+    // Add bin to path.
+    cp.execSync(`mkdir -p ${bin}`);
+    core.addPath(bin);
+
     const dfxVersion = core.getInput('dfx-version');
     const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
     if (dfxVersion) {
@@ -29,8 +33,6 @@ export async function run() {
         core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
 
         // Install dfx.
-        cp.execSync(`mkdir -p ${bin}`);
-        core.addPath(bin);
         cp.execSync(`echo y | DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`);
 
         const dfxPath = await io.which('dfx');

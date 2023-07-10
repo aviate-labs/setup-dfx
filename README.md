@@ -1,18 +1,18 @@
 # Setup The Internet Computer SDK
 
-This action sets up a dfx environment, also includes `moc` and `vessel`.
+This action sets up a `dfx` environment, also includes `moc` and `vessel`.
 
-**!** Only supports Ubuntu virtual environments.
+**!** Only supports Ubuntu/MacOS virtual environments.
 
 ## Usage
 
 ```yml
 runs-on: ubuntu-latest
 steps:
-- uses: actions/checkout@v2
-- uses: aviate-labs/setup-dfx@v0.2.3
+- uses: actions/checkout@v3
+- uses: aviate-labs/setup-dfx@v0.2.5
   with:
-    vessel-version: 0.6.2
+    vessel-version: 0.6.5
 - run: for i in src/*.mo ; do $(vessel bin)/moc $(vessel sources) --check $i ; done
 ```
 
@@ -21,10 +21,10 @@ steps:
 ```yml
 runs-on: ubuntu-latest
 steps:
-- uses: actions/checkout@v2
-- uses: aviate-labs/setup-dfx@v0.2.3
+- uses: actions/checkout@v3
+- uses: aviate-labs/setup-dfx@v0.2.5
   with:
-    dfx-version: 0.8.1
+    dfx-version: 0.14.2
   env:
     DFX_IDENTITY_PEM: ${{ secrets.DFX_IDENTITY_PEM }}
 - run: |
@@ -34,7 +34,7 @@ steps:
 
 ## Possible Improvements
 
-- Make use of the [manifest.json](https://sdk.dfinity.org/manifest.json) to check versions.
+- Make use of the [manifest.json](https://raw.githubusercontent.com/dfinity/sdk/public-manifest/manifest.json) to check versions.
 
 ## License
 
