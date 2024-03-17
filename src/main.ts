@@ -46,9 +46,9 @@ export async function run() {
         // Breaking change since dfx 0.17.0...
         core.exportVariable('DFXVM_INIT_YES', 'true');
         if (os.platform() === 'linux') {
-            core.addPath(`/home/runner/.local/share/dfx/bin`)
+            core.addPath("/home/runner/.local/share/dfx/bin")
         } else {
-            core.addPath(`/usr/Library/Application Support/org.dfinity.dfx/bin`);
+            core.addPath("/Users/runner/Library/Application\ Support/org.dfinity.dfx/bin");
         }
 
         // Install dfx.

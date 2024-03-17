@@ -80,7 +80,7 @@ function run() {
                 core.addPath(`/home/runner/.local/share/dfx/bin`);
             }
             else {
-                core.addPath(`/usr/Library/Application Support/org.dfinity.dfx/bin`);
+                core.addPath(`/Users/runner/Library/Application\ Support/org.dfinity.dfx/bin`);
             }
             // Install dfx.
             child_process_1.default.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
