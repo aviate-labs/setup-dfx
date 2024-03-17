@@ -74,16 +74,13 @@ function run() {
             core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
             // Set dfx version.
             core.exportVariable('DFX_VERSION', dfxVersion);
-            if ((0, semver_1.gte)(dfxVersion, "0.17.0")) {
-                const dfxPath = yield io.which('dfx');
-                core.exportVariable('DFXVM_INIT_YES', 'true');
-                infoExec(`${dfxPath} --version`);
-                if (os_1.default.platform() === 'linux') {
-                    core.addPath(`${bin}/dfx/bin`);
-                }
-                else {
-                    core.addPath(`/usr/local/Library/Application Support/org.dfinity.dfx/bin`);
-                }
+            // Breaking change since dfx 0.17.0...
+            core.exportVariable('DFXVM_INIT_YES', 'true');
+            if (os_1.default.platform() === 'linux') {
+                core.addPath(`$HOME/.local/share/dfx/bin`);
+            }
+            else {
+                core.addPath(`$HOME/Library/Application Support/org.dfinity.dfx/bin`);
             }
             // Install dfx.
             child_process_1.default.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
