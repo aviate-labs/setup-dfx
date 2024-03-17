@@ -41,7 +41,7 @@ export async function run() {
         core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
 
         // Install dfx.
-        cp.execSync(`DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
+        cp.execSync(`DFX_VERSION=${dfxVersion} DFXVM_INIT_YES=true sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
 
         const dfxPath = await io.which('dfx');
         core.debug(dfxPath);
