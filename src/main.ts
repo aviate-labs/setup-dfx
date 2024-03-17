@@ -48,13 +48,14 @@ export async function run() {
         if (os.platform() === 'linux') {
             core.addPath("/home/runner/.local/share/dfx/bin")
         } else {
-            core.addPath("/Users/runner/Library/Application\ Support/org.dfinity.dfx/bin");
+            core.addPath("/Users/runner/Library/Application Support/org.dfinity.dfx/bin");
         }
 
         // Install dfx.
         cp.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
 
-        const dfxPath = await io.which('dfx');
+        let dfxPath = await io.which('dfx');
+        dfxPath = dfxPath.replace(" ", "\\ "); // Escape spaces in path.
         infoExec(`${dfxPath} --version`);
 
         // Setup identity.

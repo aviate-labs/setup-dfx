@@ -77,14 +77,15 @@ function run() {
             // Breaking change since dfx 0.17.0...
             core.exportVariable('DFXVM_INIT_YES', 'true');
             if (os_1.default.platform() === 'linux') {
-                core.addPath(`/home/runner/.local/share/dfx/bin`);
+                core.addPath("/home/runner/.local/share/dfx/bin");
             }
             else {
-                core.addPath(`/Users/runner/Library/Application\ Support/org.dfinity.dfx/bin`);
+                core.addPath("/Users/runner/Library/Application Support/org.dfinity.dfx/bin");
             }
             // Install dfx.
             child_process_1.default.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
-            const dfxPath = yield io.which('dfx');
+            let dfxPath = yield io.which('dfx');
+            dfxPath = dfxPath.replace(" ", "\\ "); // Escape spaces in path.
             infoExec(`${dfxPath} --version`);
             // Setup identity.
             const id = process.env[`DFX_IDENTITY_PEM`] || '';
