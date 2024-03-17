@@ -46,16 +46,15 @@ export async function run() {
         // Breaking change since dfx 0.17.0...
         core.exportVariable('DFXVM_INIT_YES', 'true');
         if (os.platform() === 'linux') {
-            core.addPath(`$HOME/.local/share/dfx/bin`)
+            core.addPath(`/home/runner/.local/share/dfx/bin`)
         } else {
-            core.addPath(`$HOME/Library/Application Support/org.dfinity.dfx/bin`);
+            core.addPath(`/usr/Library/Application Support/org.dfinity.dfx/bin`);
         }
 
         // Install dfx.
         cp.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
 
         const dfxPath = await io.which('dfx');
-        core.debug(dfxPath);
         infoExec(`${dfxPath} --version`);
 
         // Setup identity.
