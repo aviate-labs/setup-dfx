@@ -1,17 +1,17 @@
-name: 'Setup dfx environment'
+name: 'Setup DFX environment'
 author: 'Quint Daenen'
 description: 'Setup a dfx environment and add it to the PATH.'
 inputs:
   dfx-version:
-    description: 'The dfx version to download.'
+    description: 'The dfx version to download. If empty DFX will not be installed. You can also use "latest" to get the latest version.'
   dfx-disable-encryption:
-    description: 'Whether to use the .pem encryption'
+    description: 'Whether to use the .pem encryption.'
     default: "false"
   install-moc:
     description: 'Whether to install moc through dfx.'
     default: "false"
   vessel-version:
-    description: 'The vessel version to download.'
+    description: 'The vessel version to download. If empty vessel will not be installed.'
 runs:
   using: 'node20'
   main: 'dist/index.js'

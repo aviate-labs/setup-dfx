@@ -53,12 +53,12 @@ function run() {
         // Configured to run on linux by default.
         let bin = '/home/runner/bin';
         let vesselBuild = 'linux64';
-        // Alter params if running on Mac OS.
+        // Alter params if running on  macOS.
         if (os_1.default.platform() === 'darwin') {
             bin = '/usr/local/share';
             vesselBuild = 'macos';
         }
-        // Die if not running on linux or Mac OS.
+        // Die if not running on linux or macOS.
         if (!['linux', 'darwin'].includes(os_1.default.platform())) {
             core.setFailed(`Action not supported for: ${os_1.default.platform()} ${os_1.default.arch()}.`);
             return;
@@ -66,9 +66,12 @@ function run() {
         // Add bin to path.
         child_process_1.default.execSync(`mkdir -p ${bin}`);
         core.addPath(bin);
-        const dfxVersion = core.getInput('dfx-version');
+        let dfxVersion = core.getInput('dfx-version');
         const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
         if (dfxVersion) {
+            if (dfxVersion === 'latest') {
+                dfxVersion = "";
+            }
             core.info(`Setup dfx version ${dfxVersion}${dfxDisableEncryption ? ' (without encryption)' : ''}`);
             // Opt-out of having data collected about dfx usage.
             core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
