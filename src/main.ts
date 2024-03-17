@@ -40,8 +40,23 @@ export async function run() {
         // Opt-out of having data collected about dfx usage.
         core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
 
+        // Set dfx version.
+        core.exportVariable('DFX_VERSION', dfxVersion);
+
+        if (gte(dfxVersion, "0.17.0")) {
+            const dfxPath = await io.which('dfx');
+            core.exportVariable('DFXVM_INIT_YES', 'true');
+            infoExec(`${dfxPath} --version`);
+
+            if (os.platform() === 'linux') {
+                core.addPath(`${bin}/dfx/bin`)
+            } else {
+                core.addPath(`/usr/local/Library/Application Support/org.dfinity.dfx/bin`);
+            }
+        }
+
         // Install dfx.
-        cp.execSync(`DFX_VERSION=${dfxVersion} DFXVM_INIT_YES=true sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
+        cp.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
 
         const dfxPath = await io.which('dfx');
         core.debug(dfxPath);

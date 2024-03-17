@@ -4,15 +4,13 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest ]
+        version: [ 0.16.0, 0.18.0 ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          latest=$(curl -s 'https://raw.githubusercontent.com/dfinity/sdk/master/public/manifest.json' | jq -r '.tags.latest')
-          echo "LATEST=$latest" >> "$GITHUB_ENV"
       - uses: ./
         with:
-          dfx-version: ${{ env.LATEST }}
+          dfx-version: ${{ matrix.version }}
           install-moc: true
           vessel-version: 0.7.0
       - run: |
