@@ -2,20 +2,20 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import cp from 'child_process';
 import os from 'os';
-import { gte } from "semver";
+import {gte} from "semver";
 
 export async function run() {
     // Configured to run on linux by default.
     let bin = '/home/runner/bin';
     let vesselBuild = 'linux64';
-    
-    // Alter params if running on Mac OS.
+
+    // Alter params if running on  macOS.
     if (os.platform() === 'darwin') {
         bin = '/usr/local/share';
         vesselBuild = 'macos';
     }
-    
-    // Die if not running on linux or Mac OS.
+
+    // Die if not running on linux or macOS.
     if (!['linux', 'darwin'].includes(os.platform())) {
         core.setFailed(`Action not supported for: ${os.platform()} ${os.arch()}.`)
         return;
@@ -25,19 +25,34 @@ export async function run() {
     cp.execSync(`mkdir -p ${bin}`);
     core.addPath(bin);
 
-    const dfxVersion = core.getInput('dfx-version');
+    let dfxVersion = core.getInput('dfx-version');
     const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
     if (dfxVersion) {
+        if (dfxVersion === 'latest') {
+            dfxVersion = ""
+        }
+
         core.info(`Setup dfx version ${dfxVersion}${dfxDisableEncryption ? ' (without encryption)' : ''}`);
 
         // Opt-out of having data collected about dfx usage.
         core.exportVariable('DFX_TELEMETRY_DISABLED', 1);
 
-        // Install dfx.
-        cp.execSync(`echo y | DFX_VERSION=${dfxVersion} sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"`);
+        // Set dfx version.
+        core.exportVariable('DFX_VERSION', dfxVersion);
 
-        const dfxPath = await io.which('dfx');
-        core.debug(dfxPath);
+        // Breaking change since dfx 0.17.0...
+        core.exportVariable('DFXVM_INIT_YES', 'true');
+        if (os.platform() === 'linux') {
+            core.addPath("/home/runner/.local/share/dfx/bin")
+        } else {
+            core.addPath("/Users/runner/Library/Application Support/org.dfinity.dfx/bin");
+        }
+
+        // Install dfx.
+        cp.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
+
+        let dfxPath = await io.which('dfx');
+        dfxPath = dfxPath.replace(" ", "\\ "); // Escape spaces in path.
         infoExec(`${dfxPath} --version`);
 
         // Setup identity.
@@ -74,7 +89,7 @@ export async function run() {
     const vesselVersion = core.getInput('vessel-version');
     if (vesselVersion) {
         cp.execSync(
-          `wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`
+            `wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`
         );
         cp.execSync(`chmod +x ${bin}/vessel`);
 
