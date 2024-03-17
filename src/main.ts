@@ -2,19 +2,26 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import cp from 'child_process';
 import os from 'os';
-import { gte } from "semver";
+import {gte} from "semver";
+
+type Manifest = {
+    tags: {
+        latest: string;
+    }
+    versions: string[];
+}
 
 export async function run() {
     // Configured to run on linux by default.
     let bin = '/home/runner/bin';
     let vesselBuild = 'linux64';
-    
+
     // Alter params if running on Mac OS.
     if (os.platform() === 'darwin') {
         bin = '/usr/local/share';
         vesselBuild = 'macos';
     }
-    
+
     // Die if not running on linux or Mac OS.
     if (!['linux', 'darwin'].includes(os.platform())) {
         core.setFailed(`Action not supported for: ${os.platform()} ${os.arch()}.`)
@@ -74,7 +81,7 @@ export async function run() {
     const vesselVersion = core.getInput('vessel-version');
     if (vesselVersion) {
         cp.execSync(
-          `wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`
+            `wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`
         );
         cp.execSync(`chmod +x ${bin}/vessel`);
 

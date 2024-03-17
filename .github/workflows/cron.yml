@@ -1,18 +1,18 @@
-on: [ push ]
+on:
+  schedule:
+    - cron: '30 1 1,15 * *' # Run at 01:30 on the 1st and 15th day of the month.
+
 jobs:
-  test:
+  test_schedule:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          latest=$(curl -s 'https://raw.githubusercontent.com/dfinity/sdk/master/public/manifest.json' | jq -r '.tags.latest')
-          echo "LATEST=$latest" >> "$GITHUB_ENV"
       - uses: ./
         with:
-          dfx-version: ${{ env.LATEST }}
+          dfx-version: latest
           install-moc: true
           vessel-version: 0.7.0
       - run: |

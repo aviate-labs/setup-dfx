@@ -5,7 +5,7 @@ inputs:
   dfx-version:
     description: 'The dfx version to download.'
   dfx-disable-encryption:
-    description: 'Wether to use the .pem encryption'
+    description: 'Whether to use the .pem encryption'
     default: "false"
   install-moc:
     description: 'Whether to install moc through dfx.'
@@ -13,7 +13,7 @@ inputs:
   vessel-version:
     description: 'The vessel version to download.'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   icon: 'box'
