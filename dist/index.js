@@ -130,7 +130,7 @@ function run() {
         // Install PocketIC.
         const pocketicVersion = core.getInput('pocketic-version');
         if (pocketicVersion) {
-            child_process_1.default.execSync(`wget -O ${bin}/pocketic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`);
+            child_process_1.default.execSync(`wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`);
             child_process_1.default.execSync(`gunzip ${bin}/pocket-ic.gz && mv ${bin}/pocket-ic/pocket-ic-x86_64-${pocketicBuild} ${bin}/pocket-ic`);
             child_process_1.default.execSync(`chmod +x ${bin}/pocket-ic`);
             const pocketicPath = yield io.which('pocket-ic');
