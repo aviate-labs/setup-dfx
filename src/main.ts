@@ -105,7 +105,7 @@ export async function run() {
         cp.execSync(
             `wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`
         );
-        cp.execSync(`gunzip ${bin}/pocket-ic.gz && mv ${bin}/pocket-ic/pocket-ic-x86_64-${pocketicBuild} ${bin}/pocket-ic`);
+        cp.execSync(`gunzip ${bin}/pocket-ic.gz`);
         cp.execSync(`chmod +x ${bin}/pocket-ic`);
 
         const pocketicPath = await io.which('pocket-ic');
