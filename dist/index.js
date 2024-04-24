@@ -53,10 +53,12 @@ function run() {
         // Configured to run on linux by default.
         let bin = '/home/runner/bin';
         let vesselBuild = 'linux64';
+        let pocketicBuild = 'linux';
         // Alter params if running on  macOS.
         if (os_1.default.platform() === 'darwin') {
             bin = '/usr/local/share';
             vesselBuild = 'macos';
+            pocketicBuild = 'darwin';
         }
         // Die if not running on linux or macOS.
         if (!['linux', 'darwin'].includes(os_1.default.platform())) {
@@ -124,6 +126,15 @@ function run() {
             child_process_1.default.execSync(`chmod +x ${bin}/vessel`);
             const vesselPath = yield io.which('vessel');
             infoExec(`${vesselPath} --version`);
+        }
+        // Install PocketIC.
+        const pocketicVersion = core.getInput('pocketic-version');
+        if (pocketicVersion) {
+            child_process_1.default.execSync(`wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`);
+            child_process_1.default.execSync(`gunzip ${bin}/pocket-ic.gz`);
+            child_process_1.default.execSync(`chmod +x ${bin}/pocket-ic`);
+            const pocketicPath = yield io.which('pocket-ic');
+            infoExec(`${pocketicPath} --version`);
         }
     });
 }

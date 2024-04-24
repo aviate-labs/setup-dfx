@@ -8,11 +8,13 @@ export async function run() {
     // Configured to run on linux by default.
     let bin = '/home/runner/bin';
     let vesselBuild = 'linux64';
+    let pocketicBuild = 'linux';
 
     // Alter params if running on  macOS.
     if (os.platform() === 'darwin') {
         bin = '/usr/local/share';
         vesselBuild = 'macos';
+        pocketicBuild = 'darwin';
     }
 
     // Die if not running on linux or macOS.
@@ -95,6 +97,19 @@ export async function run() {
 
         const vesselPath = await io.which('vessel');
         infoExec(`${vesselPath} --version`);
+    }
+
+    // Install PocketIC.
+    const pocketicVersion = core.getInput('pocketic-version');
+    if (pocketicVersion) {
+        cp.execSync(
+            `wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`
+        );
+        cp.execSync(`gunzip ${bin}/pocket-ic.gz`);
+        cp.execSync(`chmod +x ${bin}/pocket-ic`);
+
+        const pocketicPath = await io.which('pocket-ic');
+        infoExec(`${pocketicPath} --version`);
     }
 }
 
