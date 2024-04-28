@@ -12,7 +12,7 @@ export async function run() {
 
     // Alter params if running on  macOS.
     if (os.platform() === 'darwin') {
-        bin = '/usr/local/share';
+        bin = '/Users/runner/bin';
         vesselBuild = 'macos';
         pocketicBuild = 'darwin';
     }

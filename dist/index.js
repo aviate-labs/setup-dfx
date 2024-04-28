@@ -56,7 +56,7 @@ function run() {
         let pocketicBuild = 'linux';
         // Alter params if running on  macOS.
         if (os_1.default.platform() === 'darwin') {
-            bin = '/usr/local/share';
+            bin = '/Users/runner/bin';
             vesselBuild = 'macos';
             pocketicBuild = 'darwin';
         }
