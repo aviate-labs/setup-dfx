@@ -56,7 +56,7 @@ function run() {
         let pocketicBuild = 'linux';
         // Alter params if running on  macOS.
         if (os_1.default.platform() === 'darwin') {
-            bin = '/usr/local/share';
+            bin = '/Users/runner/bin';
             vesselBuild = 'macos';
             pocketicBuild = 'darwin';
         }
@@ -128,9 +128,15 @@ function run() {
             infoExec(`${vesselPath} --version`);
         }
         // Install PocketIC.
-        const pocketicVersion = core.getInput('pocketic-version');
+        const pocketicVersion = core.getInput('pocket-ic-version');
         if (pocketicVersion) {
-            child_process_1.default.execSync(`wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`);
+            try {
+                child_process_1.default.execSync(`wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`);
+            }
+            catch (error) {
+                core.debug(`Failed to download pocket-ic, trying to download from the main ic repo...`);
+                child_process_1.default.execSync(`wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/ic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`);
+            }
             child_process_1.default.execSync(`gunzip ${bin}/pocket-ic.gz`);
             child_process_1.default.execSync(`chmod +x ${bin}/pocket-ic`);
             const pocketicPath = yield io.which('pocket-ic');

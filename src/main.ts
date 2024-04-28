@@ -12,7 +12,7 @@ export async function run() {
 
     // Alter params if running on  macOS.
     if (os.platform() === 'darwin') {
-        bin = '/usr/local/share';
+        bin = '/Users/runner/bin';
         vesselBuild = 'macos';
         pocketicBuild = 'darwin';
     }
@@ -100,11 +100,18 @@ export async function run() {
     }
 
     // Install PocketIC.
-    const pocketicVersion = core.getInput('pocketic-version');
+    const pocketicVersion = core.getInput('pocket-ic-version');
     if (pocketicVersion) {
-        cp.execSync(
-            `wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`
-        );
+        try {
+            cp.execSync(
+                `wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`
+            );
+        } catch (error) {
+            core.debug(`Failed to download pocket-ic, trying to download from the main ic repo...`);
+            cp.execSync(
+                `wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/ic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`
+            );
+        }
         cp.execSync(`gunzip ${bin}/pocket-ic.gz`);
         cp.execSync(`chmod +x ${bin}/pocket-ic`);
 

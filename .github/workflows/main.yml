@@ -13,7 +13,7 @@ jobs:
           dfx-version: ${{ matrix.version }}
           install-moc: true
           vessel-version: 0.7.0
-          pocketic-version: 3.0.1
+          pocket-ic-version: release-2024-04-24_23-01-base
       - run: |
           dfx --version
           moc --version

@@ -7,7 +7,7 @@ inputs:
   dfx-disable-encryption:
     description: 'Whether to use the .pem encryption.'
     default: "false"
-  pocketic-version:
+  pocket-ic-version:
     description: 'The pocket ic version to download. If empty pocket ic will not be installed.'
   install-moc:
     description: 'Whether to install moc through dfx.'
