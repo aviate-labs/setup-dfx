@@ -32,7 +32,7 @@ export function resolveDFXVersion(): string | undefined {
 export function getCachePaths(): string[] {
     let cachePaths: string[] = [];
     if (getInput("dfx-version") || getInput("dfx-version-file")) {
-        cachePaths.push(`${process.env.GITHUB_WORKSPACE}/.cache/dfinity`);
+        cachePaths.push(`${process.env.HOME}/.cache/dfinity`);
         cachePaths.push(`${process.env.GITHUB_WORKSPACE}/.dfx`);
     }
     if (getInput("vessel-version")) {

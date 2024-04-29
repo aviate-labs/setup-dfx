@@ -23,7 +23,7 @@ jobs:
       - name: Test Cache
         run: |
           dfx new test --type=motoko --no-frontend
-          mv test/* .
+          mv test/dfx.json .
           dfx start --background
           dfx canister create test_backend
           dfx stop
