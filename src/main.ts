@@ -1,8 +1,11 @@
+import {isFeatureAvailable, restoreCache} from '@actions/cache';
 import * as core from '@actions/core';
-import * as io from '@actions/io';
+import { which } from '@actions/io';
 import cp from 'child_process';
 import os from 'os';
-import {gte} from "semver";
+import { gte } from "semver";
+
+import { getCachePaths, getPrimaryKey, resolveDFXVersion } from './cache-paths';
 
 export async function run() {
     // Configured to run on linux by default.
@@ -27,13 +30,15 @@ export async function run() {
     cp.execSync(`mkdir -p ${bin}`);
     core.addPath(bin);
 
-    let dfxVersion = core.getInput('dfx-version');
-    const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
+    let dfxVersion = resolveDFXVersion();
     if (dfxVersion) {
+        core.startGroup("dfx")
+
         if (dfxVersion === 'latest') {
             dfxVersion = ""
         }
 
+        const dfxDisableEncryption = core.getInput('dfx-disable-encryption');
         core.info(`Setup dfx version ${dfxVersion}${dfxDisableEncryption ? ' (without encryption)' : ''}`);
 
         // Opt-out of having data collected about dfx usage.
@@ -53,9 +58,11 @@ export async function run() {
         // Install dfx.
         cp.execSync(`sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`);
 
-        let dfxPath = await io.which('dfx');
+        let dfxPath = await which('dfx');
         dfxPath = dfxPath.replace(" ", "\\ "); // Escape spaces in path.
-        infoExec(`${dfxPath} --version`);
+        const cmdStr = (cp.execSync(`${dfxPath} --version`) || '').toString();
+        core.info(cmdStr);
+        core.setOutput('dfx-version', cmdStr.split('dfx ')[1].trim());
 
         // Setup identity.
         const id: string = process.env[`DFX_IDENTITY_PEM`] || '';
@@ -76,32 +83,39 @@ export async function run() {
             infoExec(`${dfxPath} identity list`);
         }
 
+        core.endGroup();
+
         // Install dfx cache to get moc.
         if (core.getBooleanInput('install-moc')) {
+            core.startGroup("moc")
             cp.execSync(`${dfxPath} cache install`);
             const cachePath = infoExec(`${dfxPath} cache show`).trim();
             core.addPath(cachePath);
 
-            const mocPath = await io.which('moc');
+            const mocPath = await which('moc');
             infoExec(`${mocPath} --version`);
+            core.endGroup();
         }
     }
 
     // Install vessel.
     const vesselVersion = core.getInput('vessel-version');
     if (vesselVersion) {
+        core.startGroup("vessel");
         cp.execSync(
             `wget -O ${bin}/vessel https://github.com/dfinity/vessel/releases/download/v${vesselVersion}/vessel-${vesselBuild}`
         );
         cp.execSync(`chmod +x ${bin}/vessel`);
 
-        const vesselPath = await io.which('vessel');
+        const vesselPath = await which('vessel');
         infoExec(`${vesselPath} --version`);
+        core.endGroup();
     }
 
     // Install PocketIC.
     const pocketicVersion = core.getInput('pocket-ic-version');
     if (pocketicVersion) {
+        core.startGroup("pocket-ic");
         try {
             cp.execSync(
                 `wget -O ${bin}/pocket-ic.gz https://github.com/dfinity/pocketic/releases/download/${pocketicVersion}/pocket-ic-x86_64-${pocketicBuild}.gz`
@@ -115,8 +129,22 @@ export async function run() {
         cp.execSync(`gunzip ${bin}/pocket-ic.gz`);
         cp.execSync(`chmod +x ${bin}/pocket-ic`);
 
-        const pocketicPath = await io.which('pocket-ic');
+        const pocketicPath = await which('pocket-ic');
         infoExec(`${pocketicPath} --version`);
+        core.endGroup();
+    }
+
+    const cache = core.getBooleanInput('cache');
+    if (cache && isFeatureAvailable()) {
+        try {
+            const cacheKey = await restoreCache(
+                getCachePaths(),
+                getPrimaryKey(),
+            );
+            core.setOutput("cache-hit", cacheKey ? true : false);
+        } catch (error) {
+            core.warning(`Failed to restore cache: ${(error as Error).message}`);
+        }
     }
 }
 

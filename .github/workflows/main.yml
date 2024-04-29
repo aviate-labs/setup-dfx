@@ -14,8 +14,19 @@ jobs:
           install-moc: true
           vessel-version: 0.7.0
           pocket-ic-version: release-2024-04-24_23-01-base
-      - run: |
+      - name: Test Versions
+        run: |
           dfx --version
           moc --version
           vessel --version
           pocket-ic --version
+      - name: Test Cache
+        run: |
+          dfx new test --type=motoko --no-frontend
+          mv test/* .
+          dfx start --background
+          dfx canister create test_backend
+          dfx stop
+
+          vessel init
+          vessel sources

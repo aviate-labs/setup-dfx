@@ -4,19 +4,31 @@ description: 'Setup a dfx environment and add it to the PATH.'
 inputs:
   dfx-version:
     description: 'The dfx version to download. If empty DFX will not be installed. You can also use "latest" to get the latest version.'
+  dfx-version-file:
+    description: 'The path to the `dfx.json` file. Will be used to get the dfx version.'
   dfx-disable-encryption:
     description: 'Whether to use the .pem encryption.'
-    default: "false"
+    default: false
+  cache:
+    description: 'Whether to cache the dfx installation.'
+    default: true
   pocket-ic-version:
     description: 'The pocket ic version to download. If empty pocket ic will not be installed.'
   install-moc:
     description: 'Whether to install moc through dfx.'
-    default: "false"
+    default: false
   vessel-version:
     description: 'The vessel version to download. If empty vessel will not be installed.'
+outputs:
+  dfx-version:
+    description: 'The dfx version that was installed.'
+  cache-hit:
+    description: 'Whether the cache was hit.'
 runs:
   using: 'node20'
-  main: 'dist/index.js'
+  main: 'dist/setup/index.js'
+  post: 'dist/cache-save/index.js'
+  post-if: success()
 branding:
   icon: 'box'
   color: 'gray-dark'
