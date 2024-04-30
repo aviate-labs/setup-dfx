@@ -82756,6 +82756,7 @@ const core_1 = __nccwpck_require__(2186);
 const os_1 = __nccwpck_require__(2037);
 const fs_1 = __nccwpck_require__(7147);
 const glob_1 = __nccwpck_require__(8090);
+const child_process_1 = __nccwpck_require__(2081);
 function resolveDFXVersion() {
     const dfxVersion = (0, core_1.getInput)('dfx-version');
     const dfxFilePath = (0, core_1.getInput)('dfx-version-file');
@@ -82780,7 +82781,7 @@ exports.resolveDFXVersion = resolveDFXVersion;
 function getCachePaths() {
     let cachePaths = [];
     if ((0, core_1.getInput)("dfx-version") || (0, core_1.getInput)("dfx-version-file")) {
-        cachePaths.push(`${process.env.GITHUB_WORKSPACE}/.cache/dfinity`);
+        cachePaths.push((0, child_process_1.execSync)("dfx cache show").toString().trim());
         cachePaths.push(`${process.env.GITHUB_WORKSPACE}/.dfx`);
     }
     if ((0, core_1.getInput)("vessel-version")) {

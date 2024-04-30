@@ -2,6 +2,7 @@ import {getInput, warning} from '@actions/core';
 import { platform } from 'os';
 import { existsSync, readFileSync } from 'fs';
 import { hashFiles } from '@actions/glob';
+import { execSync } from 'child_process';
 
 export function resolveDFXVersion(): string | undefined {
     const dfxVersion = getInput('dfx-version');
@@ -32,7 +33,7 @@ export function resolveDFXVersion(): string | undefined {
 export function getCachePaths(): string[] {
     let cachePaths: string[] = [];
     if (getInput("dfx-version") || getInput("dfx-version-file")) {
-        cachePaths.push(`${process.env.HOME}/.cache/dfinity`);
+        cachePaths.push(execSync("dfx cache show").toString().trim());
         cachePaths.push(`${process.env.GITHUB_WORKSPACE}/.dfx`);
     }
     if (getInput("vessel-version")) {

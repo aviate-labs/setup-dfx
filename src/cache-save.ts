@@ -48,7 +48,7 @@ const cacheDFX = async () => {
     }
 
     if (primaryKey === state) {
-        core.info(`Cache key is the same as the previous run. Skipping cache save.`);
+        core.info(`Cache key (${primaryKey}) is the same as the previous run. Skipping cache save.`);
         return;
     }
 
